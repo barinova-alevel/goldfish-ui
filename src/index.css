@@ -6,10 +6,10 @@
   --color-brown: #3c322c;
   --color-brown-light: #4a3b34;
   --color-brown-muted: #6b5d54;
-  --color-brand-blue: #026cb6;
-  --color-brand-blue-hover: #025a99;
-  --color-welcome-bg: #eaf4fa;
-  --color-welcome-border: #c5e3f4;
+  --color-brand-blue: #997c6e;
+  --color-brand-blue-hover: #6b5d54;
+  --color-welcome-bg: var(--color-violet-50);
+  --color-welcome-border: var(--color-violet-200);
   --font-script: 'Caveat', cursive;
   --font-sans: 'Montserrat', system-ui, sans-serif;
 }
