@@ -5,18 +5,17 @@ import { Sidebar } from './Sidebar'
 
 export function MainLayout() {
   return (
-    <div className="flex min-h-full">
-      <Sidebar />
+    <div className="flex min-h-full flex-col">
+      <Header />
 
-      <div className="ml-64 flex min-h-full min-w-0 flex-1 flex-col">
-        <Header />
-
-        <main className="flex-1 bg-white p-6">
+      <div className="flex min-h-0 min-w-0 flex-1">
+        <Sidebar />
+        <main className="min-w-0 flex-1 bg-white p-6">
           <Outlet />
         </main>
-
-        <Footer />
       </div>
+
+      <Footer />
     </div>
   )
 }

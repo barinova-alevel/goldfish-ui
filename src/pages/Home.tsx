@@ -5,8 +5,7 @@ export function Home() {
   return (
     <div>
       <h1 className="mb-6 font-script text-5xl text-brown">Self Finance Manager</h1>
-
-      <div className="rounded-md border border-welcome-border bg-welcome-bg p-6 bg-rose-100">
+      <div className="w-full max-w-4xl rounded-md border border-welcome-border bg-welcome-bg p-6">
         <p className="text-base leading-relaxed">
           Application of managing self finance with daily and date periodical report
           features.

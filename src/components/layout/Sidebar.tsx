@@ -34,12 +34,12 @@ function navLinkClass(isActive: boolean) {
 
 export function Sidebar() {
   return (
-    <aside className="fixed inset-y-0 left-0 z-30 flex w-64 flex-col bg-gradient-to-b from-cream to-tan shadow-md">
-      <div className="border-b border-brown/10 px-5 py-5">
+    <aside className="flex w-64 shrink-0 flex-col bg-gradient-to-b from-cream to-tan shadow-md">
+      {/* <div className="border-b border-brown/10 px-5 py-5">
         <h1 className="font-script text-2xl leading-tight text-brown">
           Self Finance Manager
         </h1>
-      </div>
+      </div> */}
 
       <nav className="flex-1 overflow-y-auto px-3 py-4">
         <ul className="space-y-1">
