@@ -1,79 +1,54 @@
+import { postJson } from '../api/http'
+import { authFailure, messageFromApiBody, userFromApiPayload } from './parseAuthPayload'
 import type {
   AuthResponse,
   ForgotPasswordRequest,
   LoginRequest,
   RegisterRequest,
-  UserInfo,
 } from './types'
 
-const apiBase = import.meta.env.VITE_API_BASE_URL ?? ''
-
-function parseUser(value: unknown): UserInfo | undefined {
-  if (!value || typeof value !== 'object') {
-    return undefined
+async function readBody(response: Response): Promise<unknown> {
+  const text = await response.text()
+  if (!text) {
+    return null
   }
 
-  const record = value as Record<string, unknown>
-  if (
-    typeof record.userId !== 'string' ||
-    typeof record.email !== 'string' ||
-    typeof record.name !== 'string'
-  ) {
-    return undefined
-  }
-
-  return {
-    userId: record.userId,
-    email: record.email,
-    name: record.name,
-    token: typeof record.token === 'string' ? record.token : '',
+  try {
+    return JSON.parse(text) as unknown
+  } catch {
+    return text
   }
 }
 
 async function readAuthResponse(response: Response): Promise<AuthResponse> {
-  const data: unknown = await response.json().catch(() => null)
+  const body = await readBody(response)
+  const user = userFromApiPayload(body)
 
-  if (data && typeof data === 'object') {
-    const record = data as Record<string, unknown>
-    const message =
-      typeof record.message === 'string'
-        ? record.message
-        : response.ok
-          ? 'Success'
-          : 'Request failed'
-
+  if (response.ok && user) {
     return {
-      success: Boolean(record.success),
-      message,
-      user: parseUser(record.user),
+      success: true,
+      message: 'Success',
+      user,
     }
   }
 
-  return {
-    success: false,
-    message: response.ok
-      ? 'Unexpected server response'
-      : `Request failed (${response.status})`,
+  if (response.status === 401) {
+    return authFailure(messageFromApiBody(body, 'Invalid email or password.'))
   }
+
+  if (response.status === 503 || response.status === 500) {
+    return authFailure('The service is temporarily unavailable. Please try again later.')
+  }
+
+  return authFailure(messageFromApiBody(body, 'Request failed'))
 }
 
 async function postAuth(path: string, body: unknown): Promise<AuthResponse> {
   try {
-    const response = await fetch(`${apiBase}${path}`, {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(body),
-    })
-
+    const response = await postJson(path, body)
     return await readAuthResponse(response)
   } catch {
-    return {
-      success: false,
-      message: 'Unable to reach the server. Please try again.',
-    }
+    return authFailure('Unable to reach the server. Please try again.')
   }
 }
 
@@ -82,7 +57,16 @@ export function login(request: LoginRequest): Promise<AuthResponse> {
 }
 
 export function register(request: RegisterRequest): Promise<AuthResponse> {
-  return postAuth('/api/auth/register', request)
+  const nameParts = request.name.trim().split(/\s+/)
+  const firstName = nameParts[0] ?? ''
+  const lastName = nameParts.slice(1).join(' ')
+
+  return postAuth('/api/auth/register', {
+    email: request.email,
+    password: request.password,
+    firstName,
+    lastName,
+  })
 }
 
 export function forgotPassword(request: ForgotPasswordRequest): Promise<AuthResponse> {

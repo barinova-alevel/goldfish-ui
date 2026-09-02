@@ -18,7 +18,7 @@ export function readStoredUser(): UserInfo | null {
     if (
       typeof record.userId !== 'string' ||
       typeof record.email !== 'string' ||
-      typeof record.name !== 'string'
+      typeof record.token !== 'string'
     ) {
       return null
     }
@@ -26,8 +26,9 @@ export function readStoredUser(): UserInfo | null {
     return {
       userId: record.userId,
       email: record.email,
-      name: record.name,
-      token: typeof record.token === 'string' ? record.token : '',
+      name: typeof record.name === 'string' && record.name.trim() ? record.name : record.email,
+      role: typeof record.role === 'string' && record.role.trim() ? record.role : 'User',
+      token: record.token,
     }
   } catch {
     return null
