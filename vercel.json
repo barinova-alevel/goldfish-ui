@@ -1,8 +1,8 @@
 {
   "rewrites": [
     {
-      "source": "/api/:path*",
-      "destination": "https://goldfish-app-j6a9p.ondigitalocean.app/api/:path*"
+      "source": "/((?!api/).*)",
+      "destination": "/index.html"
     }
   ]
 }
