@@ -1,7 +1,11 @@
 {
   "rewrites": [
     {
-      "source": "/((?!api/).*)",
+      "source": "/sfmb-proxy/api/:path*",
+      "destination": "https://goldfish-app-j6a9p.ondigitalocean.app/api/api/:path*"
+    },
+    {
+      "source": "/((?!sfmb-proxy/).*)",
       "destination": "/index.html"
     }
   ]
