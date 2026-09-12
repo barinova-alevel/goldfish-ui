@@ -1,4 +1,4 @@
-import type { DailyReport, Operation, OperationType } from './types'
+import type { DailyReport, Operation, OperationType, PeriodReport } from './types'
 
 function asRecord(value: unknown): Record<string, unknown> | null {
   if (!value || typeof value !== 'object' || Array.isArray(value)) {
@@ -153,6 +153,27 @@ export function parseDailyReport(value: unknown): DailyReport | undefined {
 
   return {
     date,
+    totalIncome: readNumber(record, 'totalIncome', 'TotalIncome') ?? 0,
+    totalExpenses: readNumber(record, 'totalExpenses', 'TotalExpenses') ?? 0,
+    operations: parseOperationList(record.operations ?? record.Operations),
+  }
+}
+
+export function parsePeriodReport(value: unknown): PeriodReport | undefined {
+  const record = asRecord(value)
+  if (!record) {
+    return undefined
+  }
+
+  const startDate = readDate(record.startDate ?? record.StartDate)
+  const endDate = readDate(record.endDate ?? record.EndDate)
+  if (!startDate || !endDate) {
+    return undefined
+  }
+
+  return {
+    startDate,
+    endDate,
     totalIncome: readNumber(record, 'totalIncome', 'TotalIncome') ?? 0,
     totalExpenses: readNumber(record, 'totalExpenses', 'TotalExpenses') ?? 0,
     operations: parseOperationList(record.operations ?? record.Operations),

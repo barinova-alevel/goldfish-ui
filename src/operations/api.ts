@@ -1,6 +1,14 @@
 import { messageFromBody, readJsonBody, requestJson } from '../api/http'
-import { parseDailyReport, parseOperationList, parseOperationTypeList } from './parse'
-import type { ApiResult, DailyReport, Operation, OperationType, OperationTypeWrite, OperationWrite } from './types'
+import { parseDailyReport, parseOperationList, parseOperationTypeList, parsePeriodReport } from './parse'
+import type {
+  ApiResult,
+  DailyReport,
+  Operation,
+  OperationType,
+  OperationTypeWrite,
+  OperationWrite,
+  PeriodReport,
+} from './types'
 
 async function asResult<T>(
   response: Response,
@@ -157,6 +165,34 @@ export async function getDailyReport(
     const report = parseDailyReport(result.data)
     if (!report) {
       return { ok: false, status: response.status, message: 'The server returned an invalid daily report.' }
+    }
+
+    return { ok: true, data: report }
+  } catch {
+    return networkFailure()
+  }
+}
+
+export async function getPeriodReport(
+  token: string,
+  startDate: string,
+  endDate: string,
+): Promise<ApiResult<PeriodReport>> {
+  try {
+    const params = new URLSearchParams({ startDate, endDate })
+    const response = await requestJson(`/api/PeriodReport/report/period?${params}`, { token })
+    const result = await asResult(response, (body) => body, 'Failed to generate period report.')
+    if (!result.ok) {
+      return result
+    }
+
+    const report = parsePeriodReport(result.data)
+    if (!report) {
+      return {
+        ok: false,
+        status: response.status,
+        message: 'The server returned an invalid period report.',
+      }
     }
 
     return { ok: true, data: report }

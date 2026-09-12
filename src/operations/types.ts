@@ -36,6 +36,14 @@ export interface DailyReport {
   operations: Operation[]
 }
 
+export interface PeriodReport {
+  startDate: string
+  endDate: string
+  totalIncome: number
+  totalExpenses: number
+  operations: Operation[]
+}
+
 export type ApiResult<T> =
   | { ok: true; data: T }
   | { ok: false; status: number; message: string }
