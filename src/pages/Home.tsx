@@ -7,11 +7,10 @@ export function Home() {
       <h1 className="mb-6 font-script text-5xl text-brown">Self Finance Manager</h1>
       <div className="w-full max-w-4xl rounded-md border border-welcome-border bg-welcome-bg p-6">
         <p className="text-base leading-relaxed">
-          Application of managing self finance with daily and date periodical report
-          features.
+          Take control of your everyday finances. Track your income and expenses, monitor your spending habits, and get clear daily and period-based reports to better understand where your money goes.
         </p>
         <p className="mt-2 text-base leading-relaxed">
-          React UI with a .NET Core REST API backend.
+          Built with: React, TypeScript, Tailwind CSS, and .NET Core REST API.
         </p>
 
         <Link
