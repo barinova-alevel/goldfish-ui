@@ -1,6 +1,7 @@
 import { useMemo, useState, type FormEvent } from 'react'
 import { FileText } from 'lucide-react'
 import { useAuth } from '../auth/useAuth'
+import { DatePicker } from '../components/ui/DatePicker'
 import { getPeriodReport } from '../operations/api'
 import type { Operation, PeriodReport as PeriodReportData } from '../operations/types'
 
@@ -128,12 +129,13 @@ export function PeriodReport() {
               <label htmlFor="start-date" className="mb-1.5 block text-sm font-medium text-brown">
                 Start Date *
               </label>
-              <input
+              <DatePicker
                 id="start-date"
-                type="date"
                 value={startDate}
-                onChange={(event) => setStartDate(event.target.value)}
-                className="w-full rounded-md border border-brown/20 bg-white px-3 py-2.5 text-sm text-brown focus:border-brown focus:ring-1 focus:ring-brown focus:outline-none"
+                max={endDate || undefined}
+                required
+                aria-invalid={startError ? true : undefined}
+                onChange={setStartDate}
               />
               {startError ? <p className="mt-1 text-xs text-red-700">{startError}</p> : null}
             </div>
@@ -141,12 +143,13 @@ export function PeriodReport() {
               <label htmlFor="end-date" className="mb-1.5 block text-sm font-medium text-brown">
                 End Date *
               </label>
-              <input
+              <DatePicker
                 id="end-date"
-                type="date"
                 value={endDate}
-                onChange={(event) => setEndDate(event.target.value)}
-                className="w-full rounded-md border border-brown/20 bg-white px-3 py-2.5 text-sm text-brown focus:border-brown focus:ring-1 focus:ring-brown focus:outline-none"
+                min={startDate || undefined}
+                required
+                aria-invalid={endError ? true : undefined}
+                onChange={setEndDate}
               />
               {endError ? <p className="mt-1 text-xs text-red-700">{endError}</p> : null}
             </div>

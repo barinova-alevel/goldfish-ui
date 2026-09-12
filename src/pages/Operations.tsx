@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { CirclePlus, Pencil, Trash2, X } from 'lucide-react'
+import { DatePicker } from '../components/ui/DatePicker'
 import { useAuth } from '../auth/useAuth'
 import {
   createOperation,
@@ -366,12 +367,12 @@ export function Operations() {
                 <label htmlFor="date" className="mb-1.5 block text-sm font-medium text-brown">
                   Date *
                 </label>
-                <input
+                <DatePicker
                   id="date"
-                  type="date"
                   value={form.date}
-                  onChange={(event) => setForm((current) => ({ ...current, date: event.target.value }))}
-                  className="w-full rounded-md border border-brown/20 bg-white px-3 py-2.5 text-sm text-brown focus:border-brown focus:ring-1 focus:ring-brown focus:outline-none"
+                  required
+                  aria-invalid={formErrors.date ? true : undefined}
+                  onChange={(date) => setForm((current) => ({ ...current, date }))}
                 />
                 {formErrors.date ? <p className="mt-1 text-xs text-red-700">{formErrors.date}</p> : null}
               </div>

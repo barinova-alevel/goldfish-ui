@@ -1,6 +1,7 @@
 import { useMemo, useState, type FormEvent } from 'react'
 import { FileText } from 'lucide-react'
 import { useAuth } from '../auth/useAuth'
+import { DatePicker } from '../components/ui/DatePicker'
 import { getDailyReport } from '../operations/api'
 import type { DailyReport, Operation } from '../operations/types'
 
@@ -107,16 +108,16 @@ export function DailyReport() {
       <section className="mb-6 max-w-xl rounded-md border border-brown/10 bg-cream p-5">
         <h2 className="mb-4 text-base font-semibold text-brown">Select Date</h2>
         <form onSubmit={handleSubmit} noValidate className="space-y-4">
-          <div>
+          <div className="w-72">
             <label htmlFor="report-date" className="mb-1.5 block text-sm font-medium text-brown">
               Date *
             </label>
-            <input
+            <DatePicker
               id="report-date"
-              type="date"
               value={date}
-              onChange={(event) => setDate(event.target.value)}
-              className="w-full rounded-md border border-brown/20 bg-white px-3 py-2.5 text-sm text-brown focus:border-brown focus:ring-1 focus:ring-brown focus:outline-none"
+              required
+              aria-invalid={dateError ? true : undefined}
+              onChange={setDate}
             />
             {dateError ? <p className="mt-1 text-xs text-red-700">{dateError}</p> : null}
           </div>
