@@ -44,9 +44,10 @@ describe('Home', () => {
   it('links to the operations page', () => {
     renderHome()
 
-    expect(
-      screen.getByRole('link', { name: 'Go to Operations' }),
-    ).toHaveAttribute('href', '/operations')
+    expect(screen.getByTestId('home-operations-link')).toHaveAttribute(
+      'href',
+      '/operations',
+    )
   })
 
   it('navigates to operations when the call to action is clicked', async () => {
