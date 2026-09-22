@@ -10,6 +10,8 @@ interface AuthFieldProps {
   icon: LucideIcon
   autoComplete?: string
   error?: string
+  testId?: string
+  errorTestId?: string
 }
 
 export function AuthField({
@@ -22,6 +24,8 @@ export function AuthField({
   icon: Icon,
   autoComplete,
   error,
+  testId,
+  errorTestId,
 }: AuthFieldProps) {
   return (
     <div>
@@ -35,6 +39,7 @@ export function AuthField({
         />
         <input
           id={id}
+          data-testid={testId}
           type={type}
           value={value}
           autoComplete={autoComplete}
@@ -44,7 +49,11 @@ export function AuthField({
           className="w-full rounded-md border border-brown/20 bg-white py-2.5 pr-3 pl-10 text-sm text-brown placeholder:text-brown-muted/60 focus:border-brown focus:ring-1 focus:ring-brown focus:outline-none"
         />
       </div>
-      {error ? <p className="mt-1 text-xs text-red-700">{error}</p> : null}
+      {error ? (
+        <p data-testid={errorTestId} className="mt-1 text-xs text-red-700">
+          {error}
+        </p>
+      ) : null}
     </div>
   )
 }

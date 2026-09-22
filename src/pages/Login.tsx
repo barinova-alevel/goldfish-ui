@@ -59,10 +59,13 @@ export function Login() {
   }
 
   return (
-    <AuthCard title="Login" icon={Lock}>
-      <form onSubmit={handleSubmit} noValidate className="space-y-4">
+    <AuthCard title="Login" icon={Lock} testId="login-page" headingTestId="login-heading">
+      <form data-testid="login-form" onSubmit={handleSubmit} noValidate className="space-y-4">
         {formError ? (
-          <p className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">
+          <p
+            data-testid="login-form-error"
+            className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800"
+          >
             {formError}
           </p>
         ) : null}
@@ -77,6 +80,8 @@ export function Login() {
           icon={Mail}
           autoComplete="email"
           error={emailError}
+          testId="login-email"
+          errorTestId="login-email-error"
         />
 
         <AuthField
@@ -89,10 +94,13 @@ export function Login() {
           icon={KeyRound}
           autoComplete="current-password"
           error={passwordError}
+          testId="login-password"
+          errorTestId="login-password-error"
         />
 
         <button
           type="submit"
+          data-testid="login-submit"
           disabled={submitting}
           className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-brown px-4 py-2.5 text-sm font-semibold text-cream transition-colors hover:bg-brown-light focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brown disabled:opacity-60"
         >
@@ -104,6 +112,7 @@ export function Login() {
       <div className="mt-4 text-center">
         <Link
           to="/forgot-password"
+          data-testid="login-forgot-password"
           className="inline-flex items-center gap-1.5 text-sm font-medium text-brown hover:underline"
         >
           <CircleHelp className="size-4" aria-hidden="true" />
@@ -115,6 +124,7 @@ export function Login() {
         <p className="mb-3 text-sm text-brown-muted">Don't have an account?</p>
         <Link
           to="/register"
+          data-testid="login-sign-up"
           className="inline-flex items-center justify-center gap-2 rounded-md border border-brown/20 bg-white px-4 py-2 text-sm font-semibold text-brown transition-colors hover:bg-tan focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brown"
         >
           <UserPlus className="size-4" aria-hidden="true" />

@@ -63,17 +63,17 @@ describe('Login', () => {
   it('renders the login form and related links', () => {
     renderLogin()
 
-    expect(screen.getByRole('heading', { name: 'Login' })).toBeInTheDocument()
-    expect(screen.getByLabelText('Email')).toBeInTheDocument()
-    expect(screen.getByLabelText('Password')).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: /Forgot Password/ })).toHaveAttribute(
+    expect(screen.getByTestId('login-page')).toBeInTheDocument()
+    expect(screen.getByTestId('login-heading')).toHaveTextContent('Login')
+    expect(screen.getByTestId('login-form')).toBeInTheDocument()
+    expect(screen.getByTestId('login-email')).toBeInTheDocument()
+    expect(screen.getByTestId('login-password')).toBeInTheDocument()
+    expect(screen.getByTestId('login-submit')).toHaveTextContent('Login')
+    expect(screen.getByTestId('login-forgot-password')).toHaveAttribute(
       'href',
       '/forgot-password',
     )
-    expect(screen.getByRole('link', { name: 'Sign Up' })).toHaveAttribute(
-      'href',
-      '/register',
-    )
+    expect(screen.getByTestId('login-sign-up')).toHaveAttribute('href', '/register')
   })
 
   it('redirects an already authenticated user away from login', () => {
@@ -89,8 +89,10 @@ describe('Login', () => {
 
     await userEvent.click(screen.getByRole('button', { name: 'Login' }))
 
-    expect(screen.getByText('Email is required')).toBeInTheDocument()
-    expect(screen.getByText('Password is required')).toBeInTheDocument()
+    expect(screen.getByTestId('login-email-error')).toHaveTextContent('Email is required')
+    expect(screen.getByTestId('login-password-error')).toHaveTextContent(
+      'Password is required',
+    )
     expect(loginMock).not.toHaveBeenCalled()
   })
 
@@ -99,10 +101,12 @@ describe('Login', () => {
 
     await fillAndSubmit('not-an-email', '123')
 
-    expect(screen.getByText('Enter a valid email address')).toBeInTheDocument()
-    expect(
-      screen.getByText('Password must be at least 6 characters'),
-    ).toBeInTheDocument()
+    expect(screen.getByTestId('login-email-error')).toHaveTextContent(
+      'Enter a valid email address',
+    )
+    expect(screen.getByTestId('login-password-error')).toHaveTextContent(
+      'Password must be at least 6 characters',
+    )
     expect(loginMock).not.toHaveBeenCalled()
   })
 
@@ -129,9 +133,9 @@ describe('Login', () => {
     renderLogin()
     await fillAndSubmit('user@example.com', 'secret1')
 
-    expect(
-      await screen.findByText('Invalid email or password.'),
-    ).toBeInTheDocument()
+    expect(await screen.findByTestId('login-form-error')).toHaveTextContent(
+      'Invalid email or password.',
+    )
     expect(screen.getByRole('heading', { name: 'Login' })).toBeInTheDocument()
   })
 
@@ -144,6 +148,8 @@ describe('Login', () => {
     renderLogin()
     await fillAndSubmit('user@example.com', 'secret1')
 
-    expect(await screen.findByText('Invalid credentials')).toBeInTheDocument()
+    expect(await screen.findByTestId('login-form-error')).toHaveTextContent(
+      'Invalid credentials',
+    )
   })
 })
