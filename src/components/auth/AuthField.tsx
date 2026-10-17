@@ -12,6 +12,7 @@ interface AuthFieldProps {
   error?: string
   testId?: string
   errorTestId?: string
+  disabled?: boolean
 }
 
 export function AuthField({
@@ -26,6 +27,7 @@ export function AuthField({
   error,
   testId,
   errorTestId,
+  disabled = false,
 }: AuthFieldProps) {
   return (
     <div>
@@ -45,8 +47,9 @@ export function AuthField({
           autoComplete={autoComplete}
           placeholder={placeholder}
           onChange={(event) => onChange(event.target.value)}
+          disabled={disabled}
           aria-invalid={error ? true : undefined}
-          className="w-full rounded-md border border-brown/20 bg-white py-2.5 pr-3 pl-10 text-sm text-brown placeholder:text-brown-muted/60 focus:border-brown focus:ring-1 focus:ring-brown focus:outline-none"
+          className="w-full rounded-md border border-brown/20 bg-white py-2.5 pr-3 pl-10 text-sm text-brown placeholder:text-brown-muted/60 focus:border-brown focus:ring-1 focus:ring-brown focus:outline-none disabled:bg-cream"
         />
       </div>
       {error ? (

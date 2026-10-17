@@ -1,12 +1,24 @@
-import { fireEvent, render, screen } from '@testing-library/react'
+import { act, fireEvent, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { blazorUiUrl, githubUrl } from '../../src/auth/demoUser'
 import { Login } from '../../src/pages/Login'
 import type { AuthContextValue } from '../../src/auth/context'
 import type { UserInfo } from '../../src/auth/types'
 
 const loginMock = vi.fn()
+const demoState = vi.hoisted(() => ({ password: 'secret1' }))
+
+vi.mock('../../src/auth/demoUser', async () => {
+  const actual = await vi.importActual<typeof import('../../src/auth/demoUser')>(
+    '../../src/auth/demoUser',
+  )
+  return {
+    ...actual,
+    demoPassword: () => demoState.password,
+  }
+})
 
 const authState: { user: UserInfo | null } = {
   user: null,
@@ -58,6 +70,8 @@ describe('Login', () => {
   beforeEach(() => {
     authState.user = null
     loginMock.mockReset()
+    demoState.password = 'secret1'
+    vi.useRealTimers()
   })
 
   it('renders the login form and related links', () => {
@@ -74,6 +88,11 @@ describe('Login', () => {
       '/forgot-password',
     )
     expect(screen.getByTestId('login-sign-up')).toHaveAttribute('href', '/register')
+    expect(screen.getByTestId('login-demo')).toHaveTextContent('Login with demo user')
+    expect(screen.getByTestId('login-blazor')).toHaveAttribute('href', blazorUiUrl)
+    expect(screen.getByTestId('login-blazor')).toHaveAttribute('target', '_blank')
+    expect(screen.getByTestId('login-github')).toHaveAttribute('href', githubUrl)
+    expect(screen.getByTestId('login-github')).toHaveAttribute('target', '_blank')
   })
 
   it('redirects an already authenticated user away from login', () => {
@@ -151,5 +170,43 @@ describe('Login', () => {
     expect(await screen.findByTestId('login-form-error')).toHaveTextContent(
       'Invalid credentials',
     )
+  })
+
+  it('fills demo credentials, pauses, then signs in', async () => {
+    loginMock.mockResolvedValue({
+      success: true,
+      message: 'Success',
+      user,
+    })
+
+    vi.useFakeTimers()
+    renderLogin('/operations')
+
+    fireEvent.click(screen.getByRole('button', { name: 'Login with demo user' }))
+
+    expect(screen.getByLabelText('Email')).toHaveValue('demo@goldfish.app')
+    expect(screen.getByLabelText('Password')).toHaveValue('secret1')
+    expect(screen.getByTestId('login-demo-status')).toHaveTextContent('Demo credentials loaded')
+    expect(loginMock).not.toHaveBeenCalled()
+
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(1200)
+    })
+
+    expect(loginMock).toHaveBeenCalledWith('demo@goldfish.app', 'secret1')
+    expect(screen.getByTestId('location')).toHaveTextContent('/operations')
+  })
+
+  it('does not submit demo login when the password is not configured', async () => {
+    demoState.password = ''
+    renderLogin()
+
+    await userEvent.click(screen.getByRole('button', { name: 'Login with demo user' }))
+
+    expect(screen.getByTestId('login-form-error')).toHaveTextContent(
+      'Demo login is not configured.',
+    )
+    expect(loginMock).not.toHaveBeenCalled()
+    expect(screen.getByLabelText('Email')).toHaveValue('')
   })
 })
