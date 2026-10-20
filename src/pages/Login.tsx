@@ -1,13 +1,7 @@
 import { useRef, useState, type FormEvent } from 'react'
 import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { CircleHelp, KeyRound, Lock, LogIn, Mail, UserPlus } from 'lucide-react'
-import {
-  blazorUiUrl,
-  demoEmail,
-  demoLoginDelayMs,
-  demoPassword,
-  githubUrl,
-} from '../auth/demoUser'
+import { blazorUiUrl, demoLoginDelayMs, githubUrl, loadDemoCredentials } from '../auth/demoUser'
 import { useAuth } from '../auth/useAuth'
 import { isValidEmail, minPasswordLength } from '../auth/validation'
 import { AuthCard } from '../components/auth/AuthCard'
@@ -79,25 +73,25 @@ export function Login() {
       return
     }
 
-    const passwordValue = demoPassword()
-    if (!passwordValue) {
-      setFormError('Demo login is not configured.')
-      return
-    }
-
     demoLock.current = true
     setFormError('')
     setEmailError('')
     setPasswordError('')
     setDemoPending(true)
-    setEmail(demoEmail)
-    setPassword(passwordValue)
-    setDemoStatus('Demo credentials loaded')
-
-    await new Promise((resolve) => window.setTimeout(resolve, demoLoginDelayMs))
 
     try {
-      await signIn(demoEmail, passwordValue)
+      const credentials = await loadDemoCredentials()
+      if (!credentials) {
+        setFormError('Demo login is not configured.')
+        return
+      }
+
+      setEmail(credentials.email)
+      setPassword(credentials.password)
+      setDemoStatus('Demo credentials loaded')
+
+      await new Promise((resolve) => window.setTimeout(resolve, demoLoginDelayMs))
+      await signIn(credentials.email, credentials.password)
     } finally {
       demoLock.current = false
       setDemoPending(false)

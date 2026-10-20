@@ -8,7 +8,12 @@ import type { AuthContextValue } from '../../src/auth/context'
 import type { UserInfo } from '../../src/auth/types'
 
 const loginMock = vi.fn()
-const demoState = vi.hoisted(() => ({ password: 'secret1' }))
+const demoState = vi.hoisted(() => ({
+  credentials: { email: 'demo@goldfish.app', password: 'secret1' } as {
+    email: string
+    password: string
+  } | null,
+}))
 
 vi.mock('../../src/auth/demoUser', async () => {
   const actual = await vi.importActual<typeof import('../../src/auth/demoUser')>(
@@ -16,7 +21,7 @@ vi.mock('../../src/auth/demoUser', async () => {
   )
   return {
     ...actual,
-    demoPassword: () => demoState.password,
+    loadDemoCredentials: () => Promise.resolve(demoState.credentials),
   }
 })
 
@@ -70,7 +75,7 @@ describe('Login', () => {
   beforeEach(() => {
     authState.user = null
     loginMock.mockReset()
-    demoState.password = 'secret1'
+    demoState.credentials = { email: 'demo@goldfish.app', password: 'secret1' }
     vi.useRealTimers()
   })
 
@@ -183,6 +188,9 @@ describe('Login', () => {
     renderLogin('/operations')
 
     fireEvent.click(screen.getByRole('button', { name: 'Login with demo user' }))
+    await act(async () => {
+      await Promise.resolve()
+    })
 
     expect(screen.getByLabelText('Email')).toHaveValue('demo@goldfish.app')
     expect(screen.getByLabelText('Password')).toHaveValue('secret1')
@@ -198,7 +206,7 @@ describe('Login', () => {
   })
 
   it('does not submit demo login when the password is not configured', async () => {
-    demoState.password = ''
+    demoState.credentials = null
     renderLogin()
 
     await userEvent.click(screen.getByRole('button', { name: 'Login with demo user' }))
