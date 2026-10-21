@@ -1,6 +1,6 @@
 import { useRef, useState, type FormEvent } from 'react'
 import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom'
-import { CircleHelp, KeyRound, Lock, LogIn, Mail, UserPlus } from 'lucide-react'
+import { CircleHelp, KeyRound, Lock, LogIn, Mail, Sparkles, UserPlus } from 'lucide-react'
 import { blazorUiUrl, demoLoginDelayMs, githubUrl, loadDemoCredentials } from '../auth/demoUser'
 import { useAuth } from '../auth/useAuth'
 import { isValidEmail, minPasswordLength } from '../auth/validation'
@@ -186,16 +186,23 @@ export function Login() {
         </div>
       </AuthCard>
 
-      <div className="mt-4 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-sm text-brown-muted">
+      <div className="mt-4">
         <button
           type="button"
           data-testid="login-demo"
           disabled={fieldsLocked}
           onClick={handleDemoLogin}
-          className="font-medium underline-offset-2 hover:text-brown hover:underline disabled:opacity-60"
+          className="inline-flex w-full items-center justify-center gap-2 rounded-md border-2 border-brown bg-tan px-4 py-3 text-base font-semibold text-brown shadow-sm transition-colors hover:bg-brown hover:text-cream focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brown disabled:opacity-60"
         >
+          <Sparkles className="size-4" aria-hidden="true" />
           Login with demo user
         </button>
+        <p className="mt-2 text-center text-xs font-medium text-brown-muted">
+          No account needed
+        </p>
+      </div>
+
+      <div className="mt-4 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-sm text-brown-muted">
         <a
           href={blazorUiUrl}
           data-testid="login-blazor"
