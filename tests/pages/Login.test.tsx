@@ -2,7 +2,6 @@ import { act, fireEvent, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { blazorUiUrl, githubUrl } from '../../src/auth/demoUser'
 import { Login } from '../../src/pages/Login'
 import type { AuthContextValue } from '../../src/auth/context'
 import type { UserInfo } from '../../src/auth/types'
@@ -94,10 +93,8 @@ describe('Login', () => {
     )
     expect(screen.getByTestId('login-sign-up')).toHaveAttribute('href', '/register')
     expect(screen.getByTestId('login-demo')).toHaveTextContent('Login with demo user')
-    expect(screen.getByTestId('login-blazor')).toHaveAttribute('href', blazorUiUrl)
-    expect(screen.getByTestId('login-blazor')).toHaveAttribute('target', '_blank')
-    expect(screen.getByTestId('login-github')).toHaveAttribute('href', githubUrl)
-    expect(screen.getByTestId('login-github')).toHaveAttribute('target', '_blank')
+    expect(screen.queryByText('View Blazor UI')).not.toBeInTheDocument()
+    expect(screen.queryByText('View on GitHub')).not.toBeInTheDocument()
   })
 
   it('redirects an already authenticated user away from login', () => {

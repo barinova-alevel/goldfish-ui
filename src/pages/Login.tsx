@@ -1,7 +1,7 @@
 import { useRef, useState, type FormEvent } from 'react'
 import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { CircleHelp, KeyRound, Lock, LogIn, Mail, Sparkles, UserPlus } from 'lucide-react'
-import { blazorUiUrl, demoLoginDelayMs, githubUrl, loadDemoCredentials } from '../auth/demoUser'
+import { demoLoginDelayMs, loadDemoCredentials } from '../auth/demoUser'
 import { useAuth } from '../auth/useAuth'
 import { isValidEmail, minPasswordLength } from '../auth/validation'
 import { AuthCard } from '../components/auth/AuthCard'
@@ -200,27 +200,6 @@ export function Login() {
         <p className="mt-2 text-center text-xs font-medium text-brown-muted">
           No account needed
         </p>
-      </div>
-
-      <div className="mt-4 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-sm text-brown-muted">
-        <a
-          href={blazorUiUrl}
-          data-testid="login-blazor"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="underline-offset-2 hover:text-brown hover:underline"
-        >
-          View Blazor UI
-        </a>
-        <a
-          href={githubUrl}
-          data-testid="login-github"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="underline-offset-2 hover:text-brown hover:underline"
-        >
-          View on GitHub
-        </a>
       </div>
     </div>
   )
