@@ -1,7 +1,16 @@
 import { useCallback, useEffect, useMemo, useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { CirclePlus, Pencil, Trash2, X } from 'lucide-react'
+import { DataCell, dataRowClass } from '../components/ui/DataCell'
 import { DatePicker } from '../components/ui/DatePicker'
+import {
+  Modal,
+  dialogActionsClass,
+  dialogDangerButtonClass,
+  dialogFieldClass,
+  dialogPrimaryButtonClass,
+  dialogSecondaryButtonClass,
+} from '../components/ui/Modal'
 import { useAuth } from '../auth/useAuth'
 import {
   createOperation,
@@ -211,15 +220,15 @@ export function Operations() {
 
   return (
     <div>
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h1 className="font-script text-4xl text-brown">Operations</h1>
+      <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
+        <div className="min-w-0">
+          <h1 className="font-script text-3xl leading-tight break-words text-brown sm:text-4xl">Operations</h1>
           <p className="mt-1 text-sm text-brown-muted">List of operations</p>
         </div>
         <button
           type="button"
           onClick={openCreate}
-          className="inline-flex items-center gap-2 rounded-md bg-brown px-4 py-2.5 text-sm font-semibold text-cream transition-colors hover:bg-brown-light focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brown"
+          className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md bg-brown px-4 py-2.5 text-sm font-semibold text-cream transition-colors hover:bg-brown-light focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brown sm:min-h-0 sm:w-auto"
         >
           <CirclePlus className="size-4" aria-hidden="true" />
           Add New Operation
@@ -245,9 +254,9 @@ export function Operations() {
           No operations found.
         </p>
       ) : (
-        <div className="overflow-x-auto rounded-md border border-brown/10">
-          <table className="min-w-full text-left text-sm">
-            <thead className="bg-cream text-brown">
+        <div className="lg:overflow-x-auto lg:rounded-md lg:border lg:border-brown/10">
+          <table className="w-full text-left text-sm lg:min-w-full">
+            <thead className="bg-cream text-brown max-lg:hidden">
               <tr>
                 <th className="px-4 py-3 font-semibold">Date</th>
                 <th className="px-4 py-3 font-semibold">Amount</th>
@@ -263,22 +272,30 @@ export function Operations() {
                 return (
                   <tr
                     key={operation.operationId}
-                    className={`border-t border-brown/10 ${isIncome ? 'bg-emerald-50/70' : 'bg-red-50/60'}`}
+                    className={dataRowClass(isIncome ? 'bg-emerald-50/70' : 'bg-red-50/60')}
                   >
-                    <td className="px-4 py-3 whitespace-nowrap">{formatDate(operation.date)}</td>
-                    <td
-                      className={`px-4 py-3 font-semibold whitespace-nowrap ${isIncome ? 'text-emerald-800' : 'text-red-800'}`}
-                    >
-                      {formatAmount(operation.amount, isIncome)}
-                    </td>
-                    <td className="px-4 py-3">{category?.name || '—'}</td>
-                    <td className="px-4 py-3">{operation.note || '—'}</td>
-                    <td className="px-4 py-3">
-                      <div className="flex gap-2">
+                    <DataCell label="Date">
+                      <span className="whitespace-nowrap">{formatDate(operation.date)}</span>
+                    </DataCell>
+                    <DataCell label="Amount">
+                      <span
+                        className={`font-semibold whitespace-nowrap ${isIncome ? 'text-emerald-800' : 'text-red-800'}`}
+                      >
+                        {formatAmount(operation.amount, isIncome)}
+                      </span>
+                    </DataCell>
+                    <DataCell label="Category" align="start">
+                      {category?.name || '—'}
+                    </DataCell>
+                    <DataCell label="Note" align="start">
+                      {operation.note || '—'}
+                    </DataCell>
+                    <DataCell label="Actions">
+                      <div className="flex justify-end gap-2 lg:justify-start">
                         <button
                           type="button"
                           onClick={() => openEdit(operation)}
-                          className="inline-flex items-center rounded-md border border-brown/20 bg-white p-1.5 text-brown hover:bg-tan"
+                          className="inline-flex size-11 items-center justify-center rounded-md border border-brown/20 bg-white text-brown hover:bg-tan lg:size-auto lg:p-1.5"
                           aria-label={`Edit operation ${operation.operationId}`}
                         >
                           <Pencil className="size-4" aria-hidden="true" />
@@ -289,13 +306,13 @@ export function Operations() {
                             setActionError('')
                             setDeleteTarget(operation)
                           }}
-                          className="inline-flex items-center rounded-md border border-red-200 bg-white p-1.5 text-red-700 hover:bg-red-50"
+                          className="inline-flex size-11 items-center justify-center rounded-md border border-red-200 bg-white text-red-700 hover:bg-red-50 lg:size-auto lg:p-1.5"
                           aria-label={`Delete operation ${operation.operationId}`}
                         >
                           <Trash2 className="size-4" aria-hidden="true" />
                         </button>
                       </div>
-                    </td>
+                    </DataCell>
                   </tr>
                 )
               })}
@@ -305,16 +322,15 @@ export function Operations() {
       )}
 
       {formOpen ? (
-        <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/40 p-4">
-          <div className="w-full max-w-md rounded-lg border border-brown/10 bg-cream p-6 shadow-lg">
-            <div className="mb-4 flex items-center justify-between">
+        <Modal onClose={closeForm}>
+            <div className="mb-4 flex items-center justify-between gap-3">
               <h2 className="text-xl font-bold text-brown">
                 {isEditing ? 'Edit Operation' : 'Create Operation'}
               </h2>
               <button
                 type="button"
                 onClick={closeForm}
-                className="rounded-md p-1 text-brown-muted hover:bg-tan"
+                className="inline-flex size-11 shrink-0 items-center justify-center rounded-md text-brown-muted hover:bg-tan lg:size-auto lg:p-1"
                 aria-label="Close"
               >
                 <X className="size-5" aria-hidden="true" />
@@ -348,7 +364,7 @@ export function Operations() {
                   onChange={(event) =>
                     setForm((current) => ({ ...current, operationTypeId: event.target.value }))
                   }
-                  className="w-full rounded-md border border-brown/20 bg-white px-3 py-2.5 text-sm text-brown focus:border-brown focus:ring-1 focus:ring-brown focus:outline-none"
+                  className={dialogFieldClass}
                 >
                   <option value="">-- Select operation type --</option>
                   {typeOptions.map((type) => (
@@ -387,7 +403,7 @@ export function Operations() {
                   step="0.01"
                   value={form.amount}
                   onChange={(event) => setForm((current) => ({ ...current, amount: event.target.value }))}
-                  className="w-full rounded-md border border-brown/20 bg-white px-3 py-2.5 text-sm text-brown focus:border-brown focus:ring-1 focus:ring-brown focus:outline-none"
+                  className={dialogFieldClass}
                 />
                 {formErrors.amount ? (
                   <p className="mt-1 text-xs text-red-700">{formErrors.amount}</p>
@@ -403,34 +419,32 @@ export function Operations() {
                   rows={3}
                   value={form.note}
                   onChange={(event) => setForm((current) => ({ ...current, note: event.target.value }))}
-                  className="w-full rounded-md border border-brown/20 bg-white px-3 py-2.5 text-sm text-brown focus:border-brown focus:ring-1 focus:ring-brown focus:outline-none"
+                  className={dialogFieldClass}
                 />
               </div>
 
-              <div className="flex justify-end gap-2 pt-2">
+              <div className={dialogActionsClass}>
                 <button
                   type="button"
                   onClick={closeForm}
-                  className="rounded-md border border-brown/20 bg-white px-4 py-2 text-sm font-semibold text-brown hover:bg-tan"
+                  className={dialogSecondaryButtonClass}
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={submitting || typeOptions.length === 0}
-                  className="rounded-md bg-brown px-4 py-2 text-sm font-semibold text-cream hover:bg-brown-light disabled:opacity-60"
+                  className={dialogPrimaryButtonClass}
                 >
                   {submitting ? 'Saving…' : isEditing ? 'Update' : 'Create'}
                 </button>
               </div>
             </form>
-          </div>
-        </div>
+        </Modal>
       ) : null}
 
       {deleteTarget ? (
-        <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/40 p-4">
-          <div className="w-full max-w-md rounded-lg border border-brown/10 bg-cream p-6 shadow-lg">
+        <Modal onClose={() => setDeleteTarget(null)}>
             <h2 className="mb-3 text-xl font-bold text-brown">Confirm Delete</h2>
             <p className="text-sm text-brown">Are you sure you want to delete this operation?</p>
             <p className="mt-2 text-sm text-red-700">This action cannot be undone.</p>
@@ -439,11 +453,11 @@ export function Operations() {
                 {actionError}
               </p>
             ) : null}
-            <div className="mt-5 flex justify-end gap-2">
+            <div className={dialogActionsClass}>
               <button
                 type="button"
                 onClick={() => setDeleteTarget(null)}
-                className="rounded-md border border-brown/20 bg-white px-4 py-2 text-sm font-semibold text-brown hover:bg-tan"
+                className={dialogSecondaryButtonClass}
               >
                 Cancel
               </button>
@@ -451,13 +465,12 @@ export function Operations() {
                 type="button"
                 disabled={deleting}
                 onClick={() => void confirmDelete()}
-                className="rounded-md bg-red-700 px-4 py-2 text-sm font-semibold text-white hover:bg-red-800 disabled:opacity-60"
+                className={dialogDangerButtonClass}
               >
                 {deleting ? 'Deleting…' : 'Delete'}
               </button>
             </div>
-          </div>
-        </div>
+        </Modal>
       ) : null}
     </div>
   )

@@ -49,7 +49,7 @@ export function AuthField({
           onChange={(event) => onChange(event.target.value)}
           disabled={disabled}
           aria-invalid={error ? true : undefined}
-          className="w-full rounded-md border border-brown/20 bg-white py-2.5 pr-3 pl-10 text-sm text-brown placeholder:text-brown-muted/60 focus:border-brown focus:ring-1 focus:ring-brown focus:outline-none disabled:bg-cream"
+          className="w-full min-h-11 rounded-md border border-brown/20 bg-white py-2.5 pr-3 pl-10 text-base text-brown placeholder:text-brown-muted/60 focus:border-brown focus:ring-1 focus:ring-brown focus:outline-none disabled:bg-cream lg:min-h-0 lg:text-sm"
         />
       </div>
       {error ? (

@@ -142,14 +142,15 @@ export function DatePicker({
     }
 
     const rect = button.getBoundingClientRect()
-    const width = rect.width
-    const estimatedHeight = 360
+    const margin = 8
+    const width = Math.min(Math.max(rect.width, 280), window.innerWidth - margin * 2)
+    const estimatedHeight = 380
     const gap = 8
     const fitsBelow = rect.bottom + gap + estimatedHeight <= window.innerHeight
-    const top = fitsBelow ? rect.bottom + gap : Math.max(8, rect.top - estimatedHeight - gap)
-    const left = Math.min(rect.left, window.innerWidth - width - 8)
+    const top = fitsBelow ? rect.bottom + gap : Math.max(margin, rect.top - estimatedHeight - gap)
+    const left = Math.min(Math.max(margin, rect.left), window.innerWidth - width - margin)
 
-    setPosition({ top, left: Math.max(8, left), width })
+    setPosition({ top, left, width })
   }
 
   useEffect(() => {
@@ -229,7 +230,7 @@ export function DatePicker({
             setOpen((current) => !current)
           }
         }}
-        className="flex w-full items-center justify-between gap-2 rounded-md border border-brown/20 bg-white px-3 py-2.5 text-left text-sm text-brown focus:border-brown focus:ring-1 focus:ring-brown focus:outline-none disabled:opacity-60"
+        className="flex min-h-11 w-full items-center justify-between gap-2 rounded-md border border-brown/20 bg-white px-3 py-2.5 text-left text-base text-brown focus:border-brown focus:ring-1 focus:ring-brown focus:outline-none disabled:opacity-60 lg:min-h-0 lg:text-sm"
       >
         <span className={display ? 'text-brown' : 'text-brown-muted/70'}>
           {display || 'Select date'}
@@ -245,7 +246,7 @@ export function DatePicker({
               aria-modal="false"
               aria-labelledby={labelId}
               style={{ top: position.top, left: position.left, width: position.width }}
-              className="fixed z-50 rounded-lg border border-brown/15 bg-cream p-3 shadow-xl"
+              className="fixed z-50 max-h-[calc(100dvh-1rem)] overflow-y-auto rounded-lg border border-brown/15 bg-cream p-3 shadow-xl"
             >
               <div className="mb-2 flex items-center justify-between gap-1">
                 <div className="flex items-center">
@@ -359,7 +360,7 @@ function NavButton({
       type="button"
       aria-label={label}
       onClick={onClick}
-      className="rounded-md p-1 text-brown-muted hover:bg-tan hover:text-brown"
+      className="inline-flex size-9 items-center justify-center rounded-md text-brown-muted hover:bg-tan hover:text-brown lg:size-auto lg:p-1"
     >
       {children}
     </button>

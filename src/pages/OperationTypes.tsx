@@ -2,6 +2,14 @@ import { useCallback, useEffect, useMemo, useState, type FormEvent } from 'react
 import { ArrowDownCircle, ArrowUpCircle, CirclePlus, Pencil, Trash2, X } from 'lucide-react'
 import { useAuth } from '../auth/useAuth'
 import {
+  Modal,
+  dialogActionsClass,
+  dialogDangerButtonClass,
+  dialogFieldClass,
+  dialogPrimaryButtonClass,
+  dialogSecondaryButtonClass,
+} from '../components/ui/Modal'
+import {
   createOperationType,
   deleteOperationType,
   listOperationTypes,
@@ -168,15 +176,15 @@ export function OperationTypes() {
 
   return (
     <div>
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h1 className="font-script text-4xl text-brown">Operation Types</h1>
+      <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
+        <div className="min-w-0">
+          <h1 className="font-script text-3xl leading-tight break-words text-brown sm:text-4xl">Operation Types</h1>
           <p className="mt-1 text-sm text-brown-muted">Manage income and expense categories</p>
         </div>
         <button
           type="button"
           onClick={openCreate}
-          className="inline-flex items-center gap-2 rounded-md bg-brown px-4 py-2.5 text-sm font-semibold text-cream transition-colors hover:bg-brown-light focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brown"
+          className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md bg-brown px-4 py-2.5 text-sm font-semibold text-cream transition-colors hover:bg-brown-light focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brown sm:min-h-0 sm:w-auto"
         >
           <CirclePlus className="size-4" aria-hidden="true" />
           Add New Type
@@ -202,7 +210,7 @@ export function OperationTypes() {
           No operation types found. Create your first type to get started.
         </p>
       ) : (
-        <div className="grid gap-6 md:grid-cols-2">
+        <div className="grid gap-6 lg:grid-cols-2">
           <TypeColumn
             title="Income Types"
             emptyText="No income types defined"
@@ -229,16 +237,15 @@ export function OperationTypes() {
       )}
 
       {formOpen ? (
-        <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/40 p-4">
-          <div className="w-full max-w-md rounded-lg border border-brown/10 bg-cream p-6 shadow-lg">
-            <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-xl font-bold text-brown">
+        <Modal onClose={closeForm}>
+            <div className="mb-4 flex items-center justify-between gap-3">
+              <h2 className="min-w-0 text-xl font-bold break-words text-brown">
                 {isEditing ? 'Edit Operation Type' : 'Create Operation Type'}
               </h2>
               <button
                 type="button"
                 onClick={closeForm}
-                className="rounded-md p-1 text-brown-muted hover:bg-tan"
+                className="inline-flex size-11 shrink-0 items-center justify-center rounded-md text-brown-muted hover:bg-tan lg:size-auto lg:p-1"
                 aria-label="Close"
               >
                 <X className="size-5" aria-hidden="true" />
@@ -261,7 +268,7 @@ export function OperationTypes() {
                   value={form.name}
                   maxLength={nameMaxLength}
                   onChange={(event) => setForm((current) => ({ ...current, name: event.target.value }))}
-                  className="w-full rounded-md border border-brown/20 bg-white px-3 py-2.5 text-sm text-brown focus:border-brown focus:ring-1 focus:ring-brown focus:outline-none"
+                  className={dialogFieldClass}
                 />
                 {formErrors.name ? <p className="mt-1 text-xs text-red-700">{formErrors.name}</p> : null}
               </div>
@@ -278,14 +285,14 @@ export function OperationTypes() {
                   onChange={(event) =>
                     setForm((current) => ({ ...current, description: event.target.value }))
                   }
-                  className="w-full rounded-md border border-brown/20 bg-white px-3 py-2.5 text-sm text-brown focus:border-brown focus:ring-1 focus:ring-brown focus:outline-none"
+                  className={dialogFieldClass}
                 />
                 {formErrors.description ? (
                   <p className="mt-1 text-xs text-red-700">{formErrors.description}</p>
                 ) : null}
               </div>
 
-              <label htmlFor="isIncome" className="flex items-center gap-2 text-sm text-brown">
+              <label htmlFor="isIncome" className="flex min-h-11 items-center gap-3 text-sm text-brown">
                 <input
                   id="isIncome"
                   type="checkbox"
@@ -293,37 +300,31 @@ export function OperationTypes() {
                   onChange={(event) =>
                     setForm((current) => ({ ...current, isIncome: event.target.checked }))
                   }
-                  className="size-4 rounded border-brown/30"
+                  className="size-5 rounded border-brown/30 lg:size-4"
                 />
                 This is an income type
               </label>
 
-              <div className="flex justify-end gap-2 pt-2">
-                <button
-                  type="button"
-                  onClick={closeForm}
-                  className="rounded-md border border-brown/20 bg-white px-4 py-2 text-sm font-semibold text-brown hover:bg-tan"
-                >
+              <div className={dialogActionsClass}>
+                <button type="button" onClick={closeForm} className={dialogSecondaryButtonClass}>
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="rounded-md bg-brown px-4 py-2 text-sm font-semibold text-cream hover:bg-brown-light disabled:opacity-60"
+                  className={dialogPrimaryButtonClass}
                 >
                   {submitting ? 'Saving…' : isEditing ? 'Update' : 'Create'}
                 </button>
               </div>
             </form>
-          </div>
-        </div>
+        </Modal>
       ) : null}
 
       {deleteTarget ? (
-        <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/40 p-4">
-          <div className="w-full max-w-md rounded-lg border border-brown/10 bg-cream p-6 shadow-lg">
+        <Modal onClose={() => setDeleteTarget(null)}>
             <h2 className="mb-3 text-xl font-bold text-brown">Confirm Delete</h2>
-            <p className="text-sm text-brown">
+            <p className="text-sm break-words text-brown">
               Are you sure you want to delete the operation type{' '}
               <span className="font-semibold">{deleteTarget.name}</span>?
             </p>
@@ -333,11 +334,11 @@ export function OperationTypes() {
                 {actionError}
               </p>
             ) : null}
-            <div className="mt-5 flex justify-end gap-2">
+            <div className={dialogActionsClass}>
               <button
                 type="button"
                 onClick={() => setDeleteTarget(null)}
-                className="rounded-md border border-brown/20 bg-white px-4 py-2 text-sm font-semibold text-brown hover:bg-tan"
+                className={dialogSecondaryButtonClass}
               >
                 Cancel
               </button>
@@ -345,13 +346,12 @@ export function OperationTypes() {
                 type="button"
                 disabled={deleting}
                 onClick={() => void confirmDelete()}
-                className="rounded-md bg-red-700 px-4 py-2 text-sm font-semibold text-white hover:bg-red-800 disabled:opacity-60"
+                className={dialogDangerButtonClass}
               >
                 {deleting ? 'Deleting…' : 'Delete'}
               </button>
             </div>
-          </div>
-        </div>
+        </Modal>
       ) : null}
     </div>
   )
@@ -392,17 +392,17 @@ function TypeColumn({
                 key={type.operationTypeId}
                 className="flex items-start justify-between gap-3 border-t border-brown/10 px-4 py-3 first:border-t-0"
               >
-                <div>
-                  <p className="font-medium text-brown">{type.name}</p>
+                <div className="min-w-0">
+                  <p className="font-medium break-words text-brown">{type.name}</p>
                   {type.description ? (
-                    <p className="mt-0.5 text-sm text-brown-muted">{type.description}</p>
+                    <p className="mt-0.5 text-sm break-words text-brown-muted">{type.description}</p>
                   ) : null}
                 </div>
                 <div className="flex shrink-0 gap-2">
                   <button
                     type="button"
                     onClick={() => onEdit(type)}
-                    className="inline-flex items-center rounded-md border border-brown/20 bg-white p-1.5 text-brown hover:bg-tan"
+                    className="inline-flex size-11 items-center justify-center rounded-md border border-brown/20 bg-white text-brown hover:bg-tan lg:size-auto lg:p-1.5"
                     aria-label={`Edit ${type.name}`}
                   >
                     <Pencil className="size-4" aria-hidden="true" />
@@ -410,7 +410,7 @@ function TypeColumn({
                   <button
                     type="button"
                     onClick={() => onDelete(type)}
-                    className="inline-flex items-center rounded-md border border-red-200 bg-white p-1.5 text-red-700 hover:bg-red-50"
+                    className="inline-flex size-11 items-center justify-center rounded-md border border-red-200 bg-white text-red-700 hover:bg-red-50 lg:size-auto lg:p-1.5"
                     aria-label={`Delete ${type.name}`}
                   >
                     <Trash2 className="size-4" aria-hidden="true" />

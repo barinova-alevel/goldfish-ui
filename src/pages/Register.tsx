@@ -70,6 +70,7 @@ export function Register() {
   }
 
   return (
+    <div className="mx-auto w-full max-w-md">
     <AuthCard title="Sign Up" icon={UserPlus}>
       <form onSubmit={handleSubmit} noValidate className="space-y-4">
         {formError ? (
@@ -128,7 +129,7 @@ export function Register() {
         <button
           type="submit"
           disabled={submitting}
-          className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-brown px-4 py-2.5 text-sm font-semibold text-cream transition-colors hover:bg-brown-light focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brown disabled:opacity-60"
+          className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md bg-brown px-4 py-2.5 text-sm font-semibold text-cream transition-colors hover:bg-brown-light focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brown disabled:opacity-60 sm:min-h-0"
         >
           <UserPlus className="size-4" aria-hidden="true" />
           {submitting ? 'Creating account…' : 'Create Account'}
@@ -139,11 +140,12 @@ export function Register() {
         <p className="mb-3 text-sm text-brown-muted">Already have an account?</p>
         <Link
           to="/login"
-          className="inline-flex items-center justify-center gap-2 rounded-md border border-brown/20 bg-white px-4 py-2 text-sm font-semibold text-brown transition-colors hover:bg-tan focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brown"
+          className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md border border-brown/20 bg-white px-4 py-2 text-sm font-semibold text-brown transition-colors hover:bg-tan focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brown sm:min-h-0 sm:w-auto"
         >
           Login
         </Link>
       </div>
     </AuthCard>
+    </div>
   )
 }

@@ -155,7 +155,7 @@ export function Login() {
             type="submit"
             data-testid="login-submit"
             disabled={fieldsLocked}
-            className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-brown px-4 py-2.5 text-sm font-semibold text-cream transition-colors hover:bg-brown-light focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brown disabled:opacity-60"
+            className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md bg-brown px-4 py-2.5 text-sm font-semibold text-cream transition-colors hover:bg-brown-light focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brown disabled:opacity-60 sm:min-h-0"
           >
             <LogIn className="size-4" aria-hidden="true" />
             {submitting ? 'Signing in…' : 'Login'}
@@ -178,7 +178,7 @@ export function Login() {
           <Link
             to="/register"
             data-testid="login-sign-up"
-            className="inline-flex items-center justify-center gap-2 rounded-md border border-brown/20 bg-white px-4 py-2 text-sm font-semibold text-brown transition-colors hover:bg-tan focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brown"
+            className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md border border-brown/20 bg-white px-4 py-2 text-sm font-semibold text-brown transition-colors hover:bg-tan focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brown sm:min-h-0 sm:w-auto"
           >
             <UserPlus className="size-4" aria-hidden="true" />
             Sign Up
@@ -192,7 +192,7 @@ export function Login() {
           data-testid="login-demo"
           disabled={fieldsLocked}
           onClick={handleDemoLogin}
-          className="inline-flex w-full items-center justify-center gap-2 rounded-md border-2 border-brown bg-tan px-4 py-3 text-base font-semibold text-brown shadow-sm transition-colors hover:bg-brown hover:text-cream focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brown disabled:opacity-60"
+          className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md border-2 border-brown bg-tan px-4 py-3 text-base font-semibold text-brown shadow-sm transition-colors hover:bg-brown hover:text-cream focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brown disabled:opacity-60"
         >
           <Sparkles className="size-4" aria-hidden="true" />
           Login with demo user

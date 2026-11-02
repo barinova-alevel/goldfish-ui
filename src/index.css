@@ -27,6 +27,10 @@
     height: 100%;
   }
 
+  html {
+    overflow-x: clip;
+  }
+
   body {
     margin: 0;
     font-family: var(--font-sans);
@@ -34,5 +38,11 @@
     background-color: white;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+  }
+
+  input,
+  select,
+  textarea {
+    scroll-margin-bottom: 8rem;
   }
 }

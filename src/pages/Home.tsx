@@ -4,12 +4,12 @@ import { CirclePlus } from 'lucide-react'
 export function Home() {
   return (
     <div data-testid="home-page">
-      <h1 data-testid="home-heading" className="mb-6 font-script text-5xl text-brown">
+      <h1 data-testid="home-heading" className="mb-6 font-script text-4xl leading-tight break-words text-brown sm:text-5xl">
         Self Finance Manager
       </h1>
       <div
         data-testid="home-welcome-card"
-        className="w-full max-w-4xl rounded-md border border-welcome-border bg-welcome-bg p-6"
+        className="w-full max-w-4xl rounded-md border border-welcome-border bg-welcome-bg p-4 sm:p-6"
       >
         <p data-testid="home-intro" className="text-base leading-relaxed">
           Take control of your everyday finances. Track your income and expenses, monitor your spending habits, and get clear daily and period-based reports to better understand where your money goes.
@@ -21,7 +21,7 @@ export function Home() {
         <Link
           to="/operations"
           data-testid="home-operations-link"
-          className="mt-5 inline-flex items-center gap-2 rounded-md bg-brand-blue px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-blue-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-blue"
+          className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-md bg-brand-blue px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-blue-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-blue sm:w-auto"
         >
           <CirclePlus className="size-4" aria-hidden="true" />
           Go to Operations

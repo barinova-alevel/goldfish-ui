@@ -44,6 +44,7 @@ export function ForgotPassword() {
   }
 
   return (
+    <div className="mx-auto w-full max-w-md">
     <AuthCard title="Forgot Password" icon={CircleHelp}>
       <form onSubmit={handleSubmit} noValidate className="space-y-4">
         {formError ? (
@@ -73,7 +74,7 @@ export function ForgotPassword() {
         <button
           type="submit"
           disabled={submitting}
-          className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-brown px-4 py-2.5 text-sm font-semibold text-cream transition-colors hover:bg-brown-light focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brown disabled:opacity-60"
+          className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md bg-brown px-4 py-2.5 text-sm font-semibold text-cream transition-colors hover:bg-brown-light focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brown disabled:opacity-60 sm:min-h-0"
         >
           {submitting ? 'Sending…' : 'Send Reset Instructions'}
         </button>
@@ -89,5 +90,6 @@ export function ForgotPassword() {
         </Link>
       </div>
     </AuthCard>
+    </div>
   )
 }

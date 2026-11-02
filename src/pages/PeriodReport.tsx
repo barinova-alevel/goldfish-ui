@@ -1,6 +1,7 @@
 import { useMemo, useState, type FormEvent } from 'react'
 import { FileText } from 'lucide-react'
 import { useAuth } from '../auth/useAuth'
+import { ReportOperationsTable } from '../components/reports/ReportOperationsTable'
 import { DatePicker } from '../components/ui/DatePicker'
 import { getPeriodReport } from '../operations/api'
 import type { Operation, PeriodReport as PeriodReportData } from '../operations/types'
@@ -21,32 +22,11 @@ function firstOfMonthIsoDate() {
   return isoDate(now.getFullYear(), now.getMonth() + 1, 1)
 }
 
-function formatDate(iso: string) {
-  const [year, month, day] = iso.split('-').map(Number)
-  if (!year || !month || !day) {
-    return iso
-  }
-
-  return new Date(year, month - 1, day).toLocaleDateString()
-}
-
 function formatMoney(amount: number) {
   return new Intl.NumberFormat(undefined, {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   }).format(Math.abs(amount))
-}
-
-function formatSignedAmount(amount: number, isIncome: boolean) {
-  return `${isIncome ? '+' : '-'}${formatMoney(amount)}`
-}
-
-function truncateNote(note: string) {
-  if (note.length <= 50) {
-    return note
-  }
-
-  return `${note.slice(0, 50)}…`
 }
 
 function isIncomeOperation(operation: Operation) {
@@ -117,14 +97,14 @@ export function PeriodReport() {
   return (
     <div>
       <div className="mb-6">
-        <h1 className="font-script text-4xl text-brown">Period Report</h1>
+        <h1 className="font-script text-3xl leading-tight break-words text-brown sm:text-4xl">Period Report</h1>
         <p className="mt-1 text-sm text-brown-muted">Generate financial reports for any date period</p>
       </div>
 
-      <section className="mb-6 max-w-3xl rounded-md border border-brown/10 bg-cream p-5">
+      <section className="mb-6 max-w-3xl rounded-md border border-brown/10 bg-cream p-4 sm:p-5">
         <h2 className="mb-4 text-base font-semibold text-brown">Select Period</h2>
         <form onSubmit={handleSubmit} noValidate className="space-y-4">
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid gap-4 lg:grid-cols-2">
             <div>
               <label htmlFor="start-date" className="mb-1.5 block text-sm font-medium text-brown">
                 Start Date *
@@ -157,7 +137,7 @@ export function PeriodReport() {
           <button
             type="submit"
             disabled={generating}
-            className="inline-flex items-center gap-2 rounded-md bg-brown px-4 py-2.5 text-sm font-semibold text-cream transition-colors hover:bg-brown-light disabled:opacity-60"
+            className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md bg-brown px-4 py-2.5 text-sm font-semibold text-cream transition-colors hover:bg-brown-light disabled:opacity-60 sm:min-h-0 sm:w-auto"
           >
             <FileText className="size-4" aria-hidden="true" />
             {generating ? 'Generating Report…' : 'Generate Report'}
@@ -172,22 +152,22 @@ export function PeriodReport() {
       {report ? (
         <>
           <div className="mb-6 grid gap-4 sm:grid-cols-2">
-            <article className="rounded-md bg-emerald-700 p-4 text-white">
+            <article className="min-w-0 rounded-md bg-emerald-700 p-4 text-white">
               <h3 className="text-sm font-medium">Total Income</h3>
-              <p className="mt-1 text-2xl font-bold">{formatMoney(report.totalIncome)}</p>
+              <p className="mt-1 text-xl font-bold break-words sm:text-2xl">{formatMoney(report.totalIncome)}</p>
             </article>
-            <article className="rounded-md bg-red-700 p-4 text-white">
+            <article className="min-w-0 rounded-md bg-red-700 p-4 text-white">
               <h3 className="text-sm font-medium">Total Expenses</h3>
-              <p className="mt-1 text-2xl font-bold">{formatMoney(report.totalExpenses)}</p>
+              <p className="mt-1 text-xl font-bold break-words sm:text-2xl">{formatMoney(report.totalExpenses)}</p>
             </article>
           </div>
 
           <section className="overflow-hidden rounded-md border border-brown/10">
-            <div className="flex flex-wrap items-center justify-between gap-3 bg-cream px-4 py-3">
+            <div className="flex flex-col gap-3 bg-cream px-4 py-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
               <h2 className="text-sm font-semibold text-brown">
                 Operations ({filteredOperations.length})
               </h2>
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2">
                 <FilterButton active={filter === 'all'} onClick={() => setFilter('all')} label="All" />
                 <FilterButton
                   active={filter === 'income'}
@@ -207,60 +187,8 @@ export function PeriodReport() {
                 No operations found for the selected period.
               </p>
             ) : (
-              <div className="overflow-x-auto">
-                <table className="min-w-full text-left text-sm">
-                  <thead className="bg-white text-brown">
-                    <tr>
-                      <th className="px-4 py-3 font-semibold">Date</th>
-                      <th className="px-4 py-3 font-semibold">Type</th>
-                      <th className="px-4 py-3 font-semibold">Category</th>
-                      <th className="px-4 py-3 font-semibold">Amount</th>
-                      <th className="px-4 py-3 font-semibold">Note</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredOperations.map((operation) => {
-                      const income = isIncomeOperation(operation)
-                      return (
-                        <tr
-                          key={operation.operationId}
-                          className={`border-t border-brown/10 ${income ? 'bg-emerald-50/70' : 'bg-red-50/60'}`}
-                        >
-                          <td className="px-4 py-3 whitespace-nowrap">{formatDate(operation.date)}</td>
-                          <td className="px-4 py-3">
-                            <span
-                              className={`inline-flex rounded-full px-2 py-0.5 text-xs font-semibold text-white ${income ? 'bg-emerald-700' : 'bg-red-700'}`}
-                            >
-                              {income ? 'Income' : 'Expense'}
-                            </span>
-                          </td>
-                          <td className="px-4 py-3">
-                            <p className="font-medium text-brown">
-                              {operation.operationType?.name || '—'}
-                            </p>
-                            {operation.operationType?.description ? (
-                              <p className="text-xs text-brown-muted">
-                                {operation.operationType.description}
-                              </p>
-                            ) : null}
-                          </td>
-                          <td
-                            className={`px-4 py-3 font-semibold whitespace-nowrap ${income ? 'text-emerald-800' : 'text-red-800'}`}
-                          >
-                            {formatSignedAmount(operation.amount, income)}
-                          </td>
-                          <td className="px-4 py-3 text-brown">
-                            {operation.note ? (
-                              <span title={operation.note}>{truncateNote(operation.note)}</span>
-                            ) : (
-                              <span className="text-brown-muted">No note</span>
-                            )}
-                          </td>
-                        </tr>
-                      )
-                    })}
-                  </tbody>
-                </table>
+              <div className="max-lg:p-3">
+                <ReportOperationsTable operations={filteredOperations} />
               </div>
             )}
           </section>
@@ -284,7 +212,7 @@ function FilterButton({
       type="button"
       onClick={onClick}
       className={[
-        'rounded-md border px-3 py-1.5 text-xs font-semibold',
+        'min-h-11 rounded-md border px-3 py-2 text-sm font-semibold sm:min-h-0 sm:py-1.5 sm:text-xs',
         active
           ? 'border-brown bg-brown text-cream'
           : 'border-brown/20 bg-white text-brown hover:bg-tan',
