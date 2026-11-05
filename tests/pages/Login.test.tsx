@@ -92,7 +92,12 @@ describe('Login', () => {
       '/forgot-password',
     )
     expect(screen.getByTestId('login-sign-up')).toHaveAttribute('href', '/register')
-    expect(screen.getByTestId('login-demo')).toHaveTextContent('Login with demo user')
+    const demo = screen.getByTestId('login-demo')
+    expect(demo).toHaveTextContent('Login with demo user')
+    expect(
+      demo.compareDocumentPosition(screen.getByTestId('login-form')) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy()
     expect(screen.queryByText('View Blazor UI')).not.toBeInTheDocument()
     expect(screen.queryByText('View on GitHub')).not.toBeInTheDocument()
   })

@@ -99,94 +99,8 @@ export function Login() {
   }
 
   return (
-    <div className="mx-auto w-full max-w-md">
-      <AuthCard title="Login" icon={Lock} testId="login-page" headingTestId="login-heading">
-        <form data-testid="login-form" onSubmit={handleSubmit} noValidate className="space-y-4">
-          {formError ? (
-            <p
-              data-testid="login-form-error"
-              className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800"
-            >
-              {formError}
-            </p>
-          ) : null}
-
-          <AuthField
-            id="email"
-            label="Email"
-            type="email"
-            value={email}
-            onChange={setEmail}
-            placeholder="Enter your email"
-            icon={Mail}
-            autoComplete="email"
-            error={emailError}
-            testId="login-email"
-            errorTestId="login-email-error"
-            disabled={fieldsLocked}
-          />
-
-          <AuthField
-            id="password"
-            label="Password"
-            type="password"
-            value={password}
-            onChange={setPassword}
-            placeholder="Enter your password"
-            icon={KeyRound}
-            autoComplete="current-password"
-            error={passwordError}
-            testId="login-password"
-            errorTestId="login-password-error"
-            disabled={fieldsLocked}
-          />
-
-          {demoStatus ? (
-            <p
-              data-testid="login-demo-status"
-              role="status"
-              className="text-center text-xs text-brown-muted"
-            >
-              {demoStatus}
-            </p>
-          ) : null}
-
-          <button
-            type="submit"
-            data-testid="login-submit"
-            disabled={fieldsLocked}
-            className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md bg-brown px-4 py-2.5 text-sm font-semibold text-cream transition-colors hover:bg-brown-light focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brown disabled:opacity-60 sm:min-h-0"
-          >
-            <LogIn className="size-4" aria-hidden="true" />
-            {submitting ? 'Signing in…' : 'Login'}
-          </button>
-        </form>
-
-        <div className="mt-4 text-center">
-          <Link
-            to="/forgot-password"
-            data-testid="login-forgot-password"
-            className="inline-flex items-center gap-1.5 text-sm font-medium text-brown hover:underline"
-          >
-            <CircleHelp className="size-4" aria-hidden="true" />
-            Forgot Password?
-          </Link>
-        </div>
-
-        <div className="mt-6 border-t border-brown/10 pt-5 text-center">
-          <p className="mb-3 text-sm text-brown-muted">Don't have an account?</p>
-          <Link
-            to="/register"
-            data-testid="login-sign-up"
-            className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md border border-brown/20 bg-white px-4 py-2 text-sm font-semibold text-brown transition-colors hover:bg-tan focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brown sm:min-h-0 sm:w-auto"
-          >
-            <UserPlus className="size-4" aria-hidden="true" />
-            Sign Up
-          </Link>
-        </div>
-      </AuthCard>
-
-      <div className="mt-4">
+    <AuthCard title="Login" icon={Lock} testId="login-page" headingTestId="login-heading">
+      <div className="mb-6">
         <button
           type="button"
           data-testid="login-demo"
@@ -197,10 +111,88 @@ export function Login() {
           <Sparkles className="size-4" aria-hidden="true" />
           Login with demo user
         </button>
-        <p className="mt-2 text-center text-xs font-medium text-brown-muted">
-          No account needed
-        </p>
+        <p className="mt-2 text-center text-xs font-medium text-brown-muted">No account needed</p>
       </div>
-    </div>
+
+      <form data-testid="login-form" onSubmit={handleSubmit} noValidate className="space-y-4">
+        {formError ? (
+          <p
+            data-testid="login-form-error"
+            className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800"
+          >
+            {formError}
+          </p>
+        ) : null}
+
+        <AuthField
+          id="email"
+          label="Email"
+          type="email"
+          value={email}
+          onChange={setEmail}
+          placeholder="Enter your email"
+          icon={Mail}
+          autoComplete="email"
+          error={emailError}
+          testId="login-email"
+          errorTestId="login-email-error"
+          disabled={fieldsLocked}
+        />
+
+        <AuthField
+          id="password"
+          label="Password"
+          type="password"
+          value={password}
+          onChange={setPassword}
+          placeholder="Enter your password"
+          icon={KeyRound}
+          autoComplete="current-password"
+          error={passwordError}
+          testId="login-password"
+          errorTestId="login-password-error"
+          disabled={fieldsLocked}
+        />
+
+        {demoStatus ? (
+          <p data-testid="login-demo-status" role="status" className="text-center text-xs text-brown-muted">
+            {demoStatus}
+          </p>
+        ) : null}
+
+        <button
+          type="submit"
+          data-testid="login-submit"
+          disabled={fieldsLocked}
+          className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md bg-brown px-4 py-2.5 text-sm font-semibold text-cream transition-colors hover:bg-brown-light focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brown disabled:opacity-60 sm:min-h-0"
+        >
+          <LogIn className="size-4" aria-hidden="true" />
+          {submitting ? 'Signing in…' : 'Login'}
+        </button>
+      </form>
+
+      <div className="mt-4 text-center">
+        <Link
+          to="/forgot-password"
+          data-testid="login-forgot-password"
+          className="inline-flex items-center gap-1.5 text-sm font-medium text-brown hover:underline"
+        >
+          <CircleHelp className="size-4" aria-hidden="true" />
+          Forgot Password?
+        </Link>
+      </div>
+
+      <div className="mt-6 border-t border-brown/10 pt-5 text-center">
+        <p className="mb-3 text-sm text-brown-muted">Don't have an account?</p>
+        <Link
+          to="/register"
+          data-testid="login-sign-up"
+          className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md border border-brown/20 bg-white px-4 py-2 text-sm font-semibold text-brown transition-colors hover:bg-tan focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brown sm:min-h-0 sm:w-auto"
+        >
+          <UserPlus className="size-4" aria-hidden="true" />
+          Sign Up
+        </Link>
+      </div>
+    </AuthCard>
   )
 }

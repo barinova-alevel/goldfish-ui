@@ -9,6 +9,9 @@ const projectLinkClass =
 const accountButtonClass =
   'inline-flex min-h-11 shrink-0 items-center gap-2 rounded-md border border-transparent bg-brown px-3 py-2 text-sm font-semibold text-cream transition-colors hover:bg-brown-light focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brown sm:min-h-0 sm:px-4'
 
+const mobileTextLinkClass =
+  'max-lg:min-h-11! max-lg:rounded-none! max-lg:border-0! max-lg:bg-transparent! max-lg:px-1! max-lg:py-2! max-lg:text-sm! max-lg:font-medium! max-lg:text-brown! max-lg:underline! max-lg:underline-offset-4! max-lg:hover:bg-transparent! max-lg:hover:text-brown-light!'
+
 interface HeaderProps {
   menuOpen?: boolean
   onOpenMenu?: () => void
@@ -50,7 +53,7 @@ export function Header({ menuOpen = false, onOpenMenu }: HeaderProps) {
             data-testid="blazor-ui-link"
             target="_blank"
             rel="noopener noreferrer"
-            className={projectLinkClass}
+            className={`${projectLinkClass} ${mobileTextLinkClass}`}
           >
             View Blazor UI
           </a>
@@ -59,7 +62,7 @@ export function Header({ menuOpen = false, onOpenMenu }: HeaderProps) {
             data-testid="github-link"
             target="_blank"
             rel="noopener noreferrer"
-            className={projectLinkClass}
+            className={`${projectLinkClass} ${mobileTextLinkClass}`}
           >
             View on GitHub
           </a>
@@ -76,8 +79,8 @@ export function Header({ menuOpen = false, onOpenMenu }: HeaderProps) {
             </button>
           </div>
         ) : (
-          <Link to="/login" className={accountButtonClass}>
-            <LogIn className="size-4" aria-hidden="true" />
+          <Link to="/login" className={`${accountButtonClass} ${mobileTextLinkClass}`}>
+            <LogIn className="size-4 max-lg:hidden" aria-hidden="true" />
             Login
           </Link>
         )}
